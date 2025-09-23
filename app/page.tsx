@@ -264,12 +264,17 @@ export default function Home() {
 
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
-                    <div>
+                    <div className="flex-1">
                       <div className="text-xs text-gray-500">원료 사용량</div>
                       <div className={`text-lg font-bold ${usage > 0 ? 'text-indigo-600' : 'text-gray-400'}`}>
                         {usage > 0 ? `${formatNumber(usage, 3)} kg` :
                          !isCalculable ? '계산 불가' : '0 kg'}
                       </div>
+                      {item.appearance_info && item.appearance_info.includes('그외') && (
+                        <div className="text-xs text-orange-500 mt-1">
+                          ⚠️ 원료산정 주의
+                        </div>
+                      )}
                     </div>
                     <button
                       onClick={() => openDetail(item)}
@@ -445,6 +450,17 @@ export default function Home() {
                   <div className="text-2xl font-bold text-green-600">
                     원료 사용량: {formatNumber(calculateRawMaterialUsage(selectedItem), 3)} kg
                   </div>
+                  {selectedItem.appearance_info && selectedItem.appearance_info.includes('그외') && (
+                    <div className="mt-3 p-3 bg-orange-100 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <span className="text-orange-600">⚠️</span>
+                        <div className="text-sm text-orange-700">
+                          <strong>원료산정 주의</strong><br />
+                          정제/캡슐이 아닌 제형(그외)은 원료량 산정이 정확하지 않을 수 있습니다.
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

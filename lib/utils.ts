@@ -70,13 +70,17 @@ export function calculateRawMaterialUsage(item: DrugItem): number {
   return production * kgPerUnit;
 }
 
-// 숫자 포맷팅 함수
+// 숫자 포맷팅 함수 (천단위 콤마 추가)
 export function formatNumber(num: number, decimals: number = 2): string {
   if (num === 0) return '0';
   if (num < 0.01 && decimals === 2) {
     return num.toExponential(2);
   }
-  return num.toFixed(decimals).replace(/\.?0+$/, '');
+  // 소수점 처리 후 천단위 콤마 추가
+  const formatted = num.toFixed(decimals).replace(/\.?0+$/, '');
+  const parts = formatted.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
 }
 
 // 원화 포맷팅 함수
@@ -99,17 +103,17 @@ export function exportToCSV(items: DrugItem[]) {
     '성분명',
     '분량',
     '단위',
+    '규격',
     '성상정보',
     '보험약가',
     '생산실적(2023)',
-    '생산량(계산)',
-    '원료사용량(kg)'
+    '원료사용량(kg)',
+    '주의사항'
   ];
 
   const rows = items.map(item => {
     const usage = calculateRawMaterialUsage(item);
-    const production = item.manual_production ||
-      (item.price_insurance && item.production_2023_won ? item.production_2023_won / item.price_insurance : 0);
+    const hasWarning = item.appearance_info && item.appearance_info.includes('그외');
 
     return [
       item.product_code,
@@ -120,11 +124,12 @@ export function exportToCSV(items: DrugItem[]) {
       item.ingredient_name,
       item.amount,
       item.unit,
+      item.standard || '',
       item.appearance_info || '',
       item.price_insurance || 0,
       item.production_2023_won || 0,
-      formatNumber(production, 0),
-      formatNumber(usage, 3)
+      formatNumber(usage, 3),
+      hasWarning ? '원료산정 주의' : ''
     ];
   });
 
