@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { DrugItem, searchDrugs } from '@/lib/supabase';
 import { calculateRawMaterialUsage, formatNumber, formatCurrency, exportToCSV } from '@/lib/utils';
 import DataChart from './components/DataChart';
 import ChartModal from './components/ChartModal';
 import ScrollToTop from './components/ScrollToTop';
+import AutoComplete from './components/AutoComplete';
 
 export default function Home() {
   const [items, setItems] = useState<DrugItem[]>([]);
@@ -40,6 +41,28 @@ export default function Home() {
   // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+
+  // 유니크한 성분명 리스트 생성
+  const uniqueIngredients = useMemo(() => {
+    const ingredients = new Set<string>();
+    items.forEach(item => {
+      if (item.ingredient_name) {
+        ingredients.add(item.ingredient_name);
+      }
+    });
+    return Array.from(ingredients).sort();
+  }, [items]);
+
+  // 유니크한 제조사 리스트 생성
+  const uniqueManufacturers = useMemo(() => {
+    const manufacturers = new Set<string>();
+    items.forEach(item => {
+      if (item.manufacturer_name) {
+        manufacturers.add(item.manufacturer_name);
+      }
+    });
+    return Array.from(manufacturers).sort();
+  }, [items]);
 
   // Supabase에서 데이터 가져오기
   useEffect(() => {
@@ -158,30 +181,20 @@ export default function Home() {
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-800 mb-2">
-                성분명 검색
-              </label>
-              <input
-                type="text"
-                value={ingredientFilter}
-                onChange={(e) => setIngredientFilter(e.target.value)}
-                placeholder="예: 아세트아미노펜"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-              />
-            </div>
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-800 mb-2">
-                실생산처 검색
-              </label>
-              <input
-                type="text"
-                value={manufacturerFilter}
-                onChange={(e) => setManufacturerFilter(e.target.value)}
-                placeholder="예: 한미약품"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-              />
-            </div>
+            <AutoComplete
+              label="성분명 검색"
+              placeholder="예: 아세트아미노펜"
+              value={ingredientFilter}
+              onChange={setIngredientFilter}
+              suggestions={uniqueIngredients}
+            />
+            <AutoComplete
+              label="실생산처 검색"
+              placeholder="예: 한미약품"
+              value={manufacturerFilter}
+              onChange={setManufacturerFilter}
+              suggestions={uniqueManufacturers}
+            />
           </div>
         </div>
       </div>
@@ -453,14 +466,14 @@ export default function Home() {
                   <h4 className="font-bold mb-3 text-blue-700">생산/가격 정보</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-600">보험약가:</span>
-                      <p className="font-bold text-lg text-gray-900">
+                      <span className="text-gray-600 block">보험약가:</span>
+                      <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={selectedItem.price_insurance ? formatCurrency(selectedItem.price_insurance) : '-'}>
                         {selectedItem.price_insurance ? formatCurrency(selectedItem.price_insurance) : '-'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-gray-600">생산실적 (2023):</span>
-                      <p className="font-bold text-lg text-gray-900">
+                      <span className="text-gray-600 block">생산실적 (2023):</span>
+                      <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 1)}백만원` : '-'}>
                         {selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 1)}백만원` : '-'}
                       </p>
                     </div>
