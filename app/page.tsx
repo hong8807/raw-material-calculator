@@ -18,10 +18,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // 수기 입력 모달
+  // 상세 모달
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [manualProduction, setManualProduction] = useState('');
-  const [manualUsage, setManualUsage] = useState('');
 
   // Supabase에서 데이터 가져오기
   useEffect(() => {
@@ -102,29 +100,9 @@ export default function Home() {
   // 상세 보기
   const openDetail = (item: DrugItem) => {
     setSelectedItem(item);
-    setManualProduction(item.manual_production?.toString() || '');
-    setManualUsage(item.manual_usage?.toString() || '');
     setIsModalOpen(true);
   };
 
-  // 수기 입력 저장
-  const saveManualInput = () => {
-    if (selectedItem) {
-      const updatedItem = {
-        ...selectedItem,
-        manual_production: manualProduction ? parseFloat(manualProduction) : undefined,
-        manual_usage: manualUsage ? parseFloat(manualUsage) : undefined,
-      };
-
-      setItems(items.map(item =>
-        item.id === selectedItem.id ? updatedItem : item
-      ));
-      setFilteredItems(filteredItems.map(item =>
-        item.id === selectedItem.id ? updatedItem : item
-      ));
-    }
-    setIsModalOpen(false);
-  };
 
   // 선택된 항목들
   const selectedItems = filteredItems.filter(item => checkedItems.has(item.id));
@@ -161,7 +139,7 @@ export default function Home() {
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 성분명 검색
               </label>
               <input
@@ -173,7 +151,7 @@ export default function Home() {
               />
             </div>
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 실생산처 검색
               </label>
               <input
@@ -286,9 +264,6 @@ export default function Home() {
                         {usage > 0 ? `${formatNumber(usage, 3)} kg` :
                          !isCalculable ? '계산 불가' : '0 kg'}
                       </div>
-                      {item.manual_usage && (
-                        <div className="text-xs text-blue-600 mt-1">수기 입력</div>
-                      )}
                     </div>
                     <button
                       onClick={() => openDetail(item)}
@@ -357,119 +332,121 @@ export default function Home() {
               </div>
 
               <div className="space-y-4">
+                {/* 기본 정보 */}
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h3 className="font-bold text-lg mb-3 text-indigo-600">
                     {selectedItem.ingredient_name}
                   </h3>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-500">제품명:</span>
-                      <p className="font-medium">{selectedItem.product_name}</p>
+                      <span className="text-gray-600">제품명:</span>
+                      <p className="font-medium text-gray-900">{selectedItem.product_name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">품목코드:</span>
-                      <p className="font-medium">{selectedItem.product_code}</p>
+                      <span className="text-gray-600">품목코드:</span>
+                      <p className="font-medium text-gray-900">{selectedItem.product_code}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">판매사:</span>
-                      <p className="font-medium">{selectedItem.company_name}</p>
+                      <span className="text-gray-600">판매사:</span>
+                      <p className="font-medium text-gray-900">{selectedItem.company_name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">생산처:</span>
-                      <p className="font-medium">{selectedItem.manufacturer_name}</p>
+                      <span className="text-gray-600">생산처:</span>
+                      <p className="font-medium text-gray-900">{selectedItem.manufacturer_name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">전문/일반:</span>
-                      <p className="font-medium">{selectedItem.rx_otc || '-'}</p>
+                      <span className="text-gray-600">전문/일반:</span>
+                      <p className="font-medium text-gray-900">{selectedItem.rx_otc || '-'}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">분량/단위:</span>
-                      <p className="font-medium">{selectedItem.amount} {selectedItem.unit}</p>
+                      <span className="text-gray-600">분량/단위:</span>
+                      <p className="font-medium text-gray-900">{selectedItem.amount} {selectedItem.unit}</p>
                     </div>
-                    {selectedItem.appearance_info && (
-                      <div className="col-span-2">
-                        <span className="text-gray-500">성상정보:</span>
-                        <p className="font-medium">{selectedItem.appearance_info}</p>
-                      </div>
-                    )}
                   </div>
                 </div>
 
+                {/* 생산/가격 정보 */}
                 <div className="bg-blue-50 rounded-xl p-4">
                   <h4 className="font-bold mb-3 text-blue-700">생산/가격 정보</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-gray-600">보험약가:</span>
-                      <p className="font-bold text-lg">
+                      <p className="font-bold text-lg text-gray-900">
                         {selectedItem.price_insurance ? formatCurrency(selectedItem.price_insurance) : '-'}
                       </p>
                     </div>
                     <div>
                       <span className="text-gray-600">생산실적 (2023):</span>
-                      <p className="font-bold text-lg">
+                      <p className="font-bold text-lg text-gray-900">
                         {selectedItem.production_2023_won ? formatCurrency(selectedItem.production_2023_won) : '-'}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-yellow-50 rounded-xl p-4">
-                  <h4 className="font-bold mb-3 text-yellow-700">수기 입력</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        생산량 (포장 수)
-                      </label>
-                      <input
-                        type="number"
-                        value={manualProduction}
-                        onChange={(e) => setManualProduction(e.target.value)}
-                        placeholder="직접 입력"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        원료 사용량 (kg)
-                      </label>
-                      <input
-                        type="number"
-                        value={manualUsage}
-                        onChange={(e) => setManualUsage(e.target.value)}
-                        placeholder="직접 입력"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                      />
-                    </div>
+                {/* 추가 상세 정보 */}
+                <div className="bg-purple-50 rounded-xl p-4">
+                  <h4 className="font-bold mb-3 text-purple-700">추가 정보</h4>
+                  <div className="space-y-2 text-sm">
+                    {selectedItem.pack_info && (
+                      <div>
+                        <span className="text-gray-600">포장정보:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.pack_info}</p>
+                      </div>
+                    )}
+                    {selectedItem.appearance_info && (
+                      <div>
+                        <span className="text-gray-600">성상정보:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.appearance_info}</p>
+                      </div>
+                    )}
+                    {selectedItem.storage_method && (
+                      <div>
+                        <span className="text-gray-600">저장방법:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.storage_method}</p>
+                      </div>
+                    )}
+                    {selectedItem.usage_period && (
+                      <div>
+                        <span className="text-gray-600">사용기간:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.usage_period}</p>
+                      </div>
+                    )}
+                    {selectedItem.atc_code && (
+                      <div>
+                        <span className="text-gray-600">ATC 코드:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.atc_code}</p>
+                      </div>
+                    )}
+                    {selectedItem.permit_date && (
+                      <div>
+                        <span className="text-gray-600">허가일자:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.permit_date}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
+                {/* 계산 결과 */}
                 <div className="bg-green-50 rounded-xl p-4">
                   <h4 className="font-bold mb-2 text-green-700">계산 결과</h4>
                   <div className="text-2xl font-bold text-green-600">
-                    원료 사용량: {formatNumber(calculateRawMaterialUsage({
-                      ...selectedItem,
-                      manual_production: manualProduction ? parseFloat(manualProduction) : undefined,
-                      manual_usage: manualUsage ? parseFloat(manualUsage) : undefined,
-                    }), 3)} kg
+                    원료 사용량: {formatNumber(calculateRawMaterialUsage(selectedItem), 3)} kg
                   </div>
+                  {selectedItem.price_insurance && selectedItem.production_2023_won && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      생산량: {formatNumber(selectedItem.production_2023_won / selectedItem.price_insurance, 0)} 포장
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6">
+              <div className="flex justify-end mt-6">
                 <button
-                  onClick={() => {
-                    setManualProduction('');
-                    setManualUsage('');
-                  }}
-                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
                 >
-                  초기화
-                </button>
-                <button
-                  onClick={saveManualInput}
-                  className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
-                >
-                  저장
+                  닫기
                 </button>
               </div>
             </div>

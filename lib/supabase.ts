@@ -49,7 +49,7 @@ export async function searchDrugs(
   }
 
   const { data, error } = await query
-    .order('product_name', { ascending: true });
+    .order('production_2023_won', { ascending: false, nullsFirst: false });
 
   if (error) {
     console.error('Supabase 조회 오류:', error);
