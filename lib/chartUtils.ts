@@ -2,7 +2,7 @@ import { DrugItem } from './supabase';
 import { calculateRawMaterialUsage, formatNumber } from './utils';
 
 // 실생산처별 데이터 집계 (성분명 검색 시)
-export function aggregateByManufacturer(items: DrugItem[]) {
+export function aggregateByManufacturer(items: DrugItem[], limit: number = 10) {
   const manufacturerData = new Map<string, { tablet: number; other: number }>();
 
   items.forEach(item => {
@@ -27,26 +27,26 @@ export function aggregateByManufacturer(items: DrugItem[]) {
     }
   });
 
-  // 상위 10개 데이터만 반환
+  // 지정된 개수만큼 데이터 반환
   const tabletData = Array.from(manufacturerData.entries())
     .filter(([_, data]) => data.tablet > 0)
     .sort((a, b) => b[1].tablet - a[1].tablet)
-    .slice(0, 10);
+    .slice(0, limit);
 
   const otherData = Array.from(manufacturerData.entries())
     .filter(([_, data]) => data.other > 0)
     .sort((a, b) => b[1].other - a[1].other)
-    .slice(0, 10);
+    .slice(0, limit);
 
   return { tabletData, otherData };
 }
 
 // 품목별 데이터 집계 (실생산처 검색 시)
-export function aggregateByProduct(items: DrugItem[]) {
+export function aggregateByProduct(items: DrugItem[], limit: number = 10) {
   return items
     .filter(item => item.production_2023_won && item.production_2023_won > 0)
     .sort((a, b) => (b.production_2023_won || 0) - (a.production_2023_won || 0))
-    .slice(0, 10)
+    .slice(0, limit)
     .map(item => ({
       productName: item.product_name,
       production: item.production_2023_won || 0,
@@ -58,7 +58,9 @@ export function aggregateByProduct(items: DrugItem[]) {
 export function generateColors(count: number) {
   const colors = [
     '#3B82F6', '#8B5CF6', '#06B6D4', '#10B981', '#F59E0B',
-    '#EF4444', '#EC4899', '#84CC16', '#F97316', '#6366F1'
+    '#EF4444', '#EC4899', '#84CC16', '#F97316', '#6366F1',
+    '#14B8A6', '#F43F5E', '#A855F7', '#22D3EE', '#FACC15',
+    '#DC2626', '#C026D3', '#65A30D', '#EA580C', '#4F46E5'
   ];
 
   return Array.from({ length: count }, (_, i) => colors[i % colors.length]);

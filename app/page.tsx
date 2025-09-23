@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { DrugItem, searchDrugs } from '@/lib/supabase';
 import { calculateRawMaterialUsage, formatNumber, formatCurrency, exportToCSV } from '@/lib/utils';
 import DataChart from './components/DataChart';
+import ChartModal from './components/ChartModal';
 import ScrollToTop from './components/ScrollToTop';
 
 export default function Home() {
@@ -36,8 +37,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // 상세 모달
+  // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 
   // Supabase에서 데이터 가져오기
   useEffect(() => {
@@ -225,6 +227,7 @@ export default function Home() {
             items={filteredItems}
             searchType={chartInfo.type}
             searchValue={chartInfo.value}
+            onExpand={() => setIsChartModalOpen(true)}
           />
         </div>
       )}
@@ -504,6 +507,17 @@ export default function Home() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* 차트 확대 모달 */}
+      {chartInfo.type && (
+        <ChartModal
+          isOpen={isChartModalOpen}
+          onClose={() => setIsChartModalOpen(false)}
+          items={filteredItems}
+          searchType={chartInfo.type}
+          searchValue={chartInfo.value}
+        />
       )}
 
       {/* 맨 위로 버튼 */}

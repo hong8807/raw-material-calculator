@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { Maximize2 } from 'lucide-react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,9 +31,10 @@ interface DataChartProps {
   items: DrugItem[];
   searchType: 'ingredient' | 'manufacturer';
   searchValue: string;
+  onExpand?: () => void;
 }
 
-export default function DataChart({ items, searchType, searchValue }: DataChartProps) {
+export default function DataChart({ items, searchType, searchValue, onExpand }: DataChartProps) {
   if (items.length === 0) return null;
 
   if (searchType === 'ingredient') {
@@ -42,10 +44,19 @@ export default function DataChart({ items, searchType, searchValue }: DataChartP
     if (tabletData.length === 0 && otherData.length === 0) return null;
 
     return (
-      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
-          📊 {searchValue} - 실생산처별 분석
-        </h3>
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-6 relative group">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-gray-800">
+            📊 {searchValue} - 실생산처별 분석
+          </h3>
+          <button
+            onClick={onExpand}
+            className="p-2 bg-indigo-100 hover:bg-indigo-200 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+            title="차트 확대"
+          >
+            <Maximize2 size={20} className="text-indigo-600" />
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 정제/캡슐 차트 */}
@@ -151,10 +162,19 @@ export default function DataChart({ items, searchType, searchValue }: DataChartP
     if (productData.length === 0) return null;
 
     return (
-      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
-          📊 {searchValue} - 주요 생산품목
-        </h3>
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-6 relative group">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-gray-800">
+            📊 {searchValue} - 주요 생산품목
+          </h3>
+          <button
+            onClick={onExpand}
+            className="p-2 bg-indigo-100 hover:bg-indigo-200 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+            title="차트 확대"
+          >
+            <Maximize2 size={20} className="text-indigo-600" />
+          </button>
+        </div>
 
         <div className="h-80">
           <Bar
