@@ -69,5 +69,6 @@ raw-material-calculator-next/
 더 자세한 정보는 [README_DEPLOYMENT.md](./README_DEPLOYMENT.md)를 참고해주세요.
 
 ---
-**Version**: 1.0.0
+**Version**: 1.0.1
 **Last Updated**: 2025-09-23
+**Status**: ✅ Production Ready
