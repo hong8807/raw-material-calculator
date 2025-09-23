@@ -302,7 +302,7 @@ export default function Home() {
                   <div className="flex justify-between">
                     <span className="text-gray-500 text-xs sm:text-sm">생산실적</span>
                     <span className="font-medium text-xs sm:text-sm">
-                      {item.production_2023_won ? `${formatNumber(item.production_2023_won / 1000000, 1)}백만원` : '-'}
+                      {item.production_2023_won ? `${formatNumber(item.production_2023_won / 1000000, 0)}백만원` : '-'}
                     </span>
                   </div>
                 </div>
@@ -473,8 +473,8 @@ export default function Home() {
                     </div>
                     <div>
                       <span className="text-gray-600 block">생산실적 (2023):</span>
-                      <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 1)}백만원` : '-'}>
-                        {selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 1)}백만원` : '-'}
+                      <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 0)}백만원` : '-'}>
+                        {selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 0)}백만원` : '-'}
                       </p>
                     </div>
                   </div>

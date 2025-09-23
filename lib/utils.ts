@@ -127,7 +127,7 @@ export function exportToCSV(items: DrugItem[]) {
       item.standard || '',
       item.appearance_info || '',
       item.price_insurance || 0,
-      item.production_2023_won ? formatNumber(item.production_2023_won / 1000000, 1) : 0,
+      item.production_2023_won ? formatNumber(item.production_2023_won / 1000000, 0) : 0,
       formatNumber(usage, 3),
       hasWarning ? '원료산정 주의' : ''
     ];

@@ -126,7 +126,7 @@ export default function ChartModal({
                           y: {
                             beginAtZero: true,
                             ticks: {
-                              callback: (value) => `${formatNumber(Number(value), 1)}kg`
+                              callback: (value) => `${formatNumber(Number(value), 0)}kg`
                             }
                           },
                           x: {
@@ -268,7 +268,7 @@ export default function ChartModal({
                             const index = context[0].dataIndex;
                             return `성분: ${productData[index].ingredientName}`;
                           },
-                          label: (context) => `생산실적: ${formatNumber(context.parsed.x, 1)}백만원`
+                          label: (context) => `생산실적: ${formatNumber(context.parsed.x, 0)}백만원`
                         }
                       }
                     },
@@ -321,7 +321,7 @@ export default function ChartModal({
                             {item.ingredientName}
                           </td>
                           <td className="px-3 py-2 text-right font-medium">
-                            {formatNumber(item.production, 1)}
+                            {formatNumber(item.production, 0)}
                           </td>
                         </tr>
                       ))}
@@ -331,7 +331,7 @@ export default function ChartModal({
                 <div className="mt-4 text-sm text-gray-600">
                   <p>총 {productData.length}개 품목 분석</p>
                   <p>총 생산실적: {formatNumber(
-                    productData.reduce((sum, item) => sum + item.production, 0), 1
+                    productData.reduce((sum, item) => sum + item.production, 0), 0
                   )}백만원</p>
                 </div>
               </div>

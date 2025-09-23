@@ -92,7 +92,7 @@ export default function DataChart({ items, searchType, searchValue, onExpand }: 
                       y: {
                         beginAtZero: true,
                         ticks: {
-                          callback: (value) => `${formatNumber(Number(value), 1)}kg`
+                          callback: (value) => `${formatNumber(Number(value), 0)}kg`
                         }
                       },
                       x: {
@@ -203,7 +203,7 @@ export default function DataChart({ items, searchType, searchValue, onExpand }: 
                       const index = context[0].dataIndex;
                       return `성분: ${productData[index].ingredientName}`;
                     },
-                    label: (context) => `생산실적: ${formatNumber(context.parsed.y, 1)}백만원`
+                    label: (context) => `생산실적: ${formatNumber(context.parsed.y, 0)}백만원`
                   }
                 }
               },
