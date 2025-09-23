@@ -245,7 +245,7 @@ export default function ChartModal({
                       item.productName
                     ),
                     datasets: [{
-                      label: '생산실적 (원)',
+                      label: '생산실적 (백만원)',
                       data: productData.map(item => item.production),
                       backgroundColor: generateColors(productData.length),
                       borderWidth: 0,
@@ -268,21 +268,19 @@ export default function ChartModal({
                             const index = context[0].dataIndex;
                             return `성분: ${productData[index].ingredientName}`;
                           },
-                          label: (context) => `생산실적: ${formatCurrency(context.parsed.x)}`
+                          label: (context) => `생산실적: ${formatNumber(context.parsed.x, 1)}백만원`
                         }
                       }
                     },
                     scales: {
                       x: {
                         beginAtZero: true,
+                        title: {
+                          display: true,
+                          text: '생산실적 (백만원)'
+                        },
                         ticks: {
-                          callback: (value) => {
-                            const num = Number(value);
-                            if (num >= 1e9) return `${(num / 1e9).toFixed(1)}B원`;
-                            if (num >= 1e6) return `${(num / 1e6).toFixed(1)}M원`;
-                            if (num >= 1e3) return `${(num / 1e3).toFixed(1)}K원`;
-                            return `${num}원`;
-                          }
+                          callback: (value) => `${formatNumber(Number(value), 0)}M`
                         }
                       },
                       y: {
@@ -305,7 +303,7 @@ export default function ChartModal({
                         <th className="px-3 py-2 text-left">순위</th>
                         <th className="px-3 py-2 text-left">제품명</th>
                         <th className="px-3 py-2 text-left">성분명</th>
-                        <th className="px-3 py-2 text-right">생산실적</th>
+                        <th className="px-3 py-2 text-right">생산실적 (백만원)</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -323,7 +321,7 @@ export default function ChartModal({
                             {item.ingredientName}
                           </td>
                           <td className="px-3 py-2 text-right font-medium">
-                            {formatCurrency(item.production)}
+                            {formatNumber(item.production, 1)}
                           </td>
                         </tr>
                       ))}
@@ -332,9 +330,9 @@ export default function ChartModal({
                 </div>
                 <div className="mt-4 text-sm text-gray-600">
                   <p>총 {productData.length}개 품목 분석</p>
-                  <p>총 생산실적: {formatCurrency(
-                    productData.reduce((sum, item) => sum + item.production, 0)
-                  )}</p>
+                  <p>총 생산실적: {formatNumber(
+                    productData.reduce((sum, item) => sum + item.production, 0), 1
+                  )}백만원</p>
                 </div>
               </div>
             </div>

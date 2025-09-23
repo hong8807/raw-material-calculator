@@ -179,13 +179,9 @@ export default function DataChart({ items, searchType, searchValue, onExpand }: 
         <div className="h-80">
           <Bar
             data={{
-              labels: productData.map(item =>
-                item.productName.length > 20 ?
-                item.productName.substring(0, 20) + '...' :
-                item.productName
-              ),
+              labels: productData.map((_, index) => `#${index + 1}`), // 숫자 레이블만 표시
               datasets: [{
-                label: '생산실적 (원)',
+                label: '생산실적 (백만원)',
                 data: productData.map(item => item.production),
                 backgroundColor: generateColors(productData.length),
                 borderWidth: 0,
@@ -207,26 +203,24 @@ export default function DataChart({ items, searchType, searchValue, onExpand }: 
                       const index = context[0].dataIndex;
                       return `성분: ${productData[index].ingredientName}`;
                     },
-                    label: (context) => `생산실적: ${formatCurrency(context.parsed.y)}`
+                    label: (context) => `생산실적: ${formatNumber(context.parsed.y, 1)}백만원`
                   }
                 }
               },
               scales: {
                 y: {
                   beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: '생산실적 (백만원)'
+                  },
                   ticks: {
-                    callback: (value) => {
-                      const num = Number(value);
-                      if (num >= 1e9) return `${(num / 1e9).toFixed(1)}B원`;
-                      if (num >= 1e6) return `${(num / 1e6).toFixed(1)}M원`;
-                      if (num >= 1e3) return `${(num / 1e3).toFixed(1)}K원`;
-                      return `${num}원`;
-                    }
+                    callback: (value) => `${formatNumber(Number(value), 0)}M`
                   }
                 },
                 x: {
                   ticks: {
-                    maxRotation: 45
+                    display: false // x축 레이블 숨기기
                   }
                 }
               }

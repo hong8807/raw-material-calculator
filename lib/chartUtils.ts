@@ -41,16 +41,29 @@ export function aggregateByManufacturer(items: DrugItem[], limit: number = 10) {
   return { tabletData, otherData };
 }
 
-// 품목별 데이터 집계 (실생산처 검색 시)
+// 품목별 데이터 집계 (실생산처 검색 시) - 중복 제품명 제거
 export function aggregateByProduct(items: DrugItem[], limit: number = 10) {
-  return items
+  // 제품명별로 가장 높은 생산실적을 가진 항목만 선택
+  const productMap = new Map<string, DrugItem>();
+
+  items
     .filter(item => item.production_2023_won && item.production_2023_won > 0)
+    .forEach(item => {
+      const existingItem = productMap.get(item.product_name);
+      if (!existingItem || (item.production_2023_won || 0) > (existingItem.production_2023_won || 0)) {
+        productMap.set(item.product_name, item);
+      }
+    });
+
+  // Map을 배열로 변환하고 정렬
+  return Array.from(productMap.values())
     .sort((a, b) => (b.production_2023_won || 0) - (a.production_2023_won || 0))
     .slice(0, limit)
     .map(item => ({
       productName: item.product_name,
-      production: item.production_2023_won || 0,
-      ingredientName: item.ingredient_name
+      production: (item.production_2023_won || 0) / 1000000, // 백만원 단위로 변환
+      ingredientName: item.ingredient_name,
+      productionRaw: item.production_2023_won || 0 // 원본 값 보관
     }));
 }
 
