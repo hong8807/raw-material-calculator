@@ -46,7 +46,7 @@ export default function Home() {
   };
 
   // 검색 필터링
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     if (!ingredientFilter && !manufacturerFilter) {
       setFilteredItems(items);
       return;
@@ -66,7 +66,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [ingredientFilter, manufacturerFilter, items]);
 
   // 필터 변경 시 자동 검색 (디바운싱)
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function Home() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [ingredientFilter, manufacturerFilter]);
+  }, [ingredientFilter, manufacturerFilter, handleSearch]);
 
   // 체크박스 토글
   const toggleCheck = (id: number) => {
