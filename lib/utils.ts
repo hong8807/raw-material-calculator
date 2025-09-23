@@ -106,7 +106,7 @@ export function exportToCSV(items: DrugItem[]) {
     '규격',
     '성상정보',
     '보험약가',
-    '생산실적(2023)',
+    '생산실적(백만원)',
     '원료사용량(kg)',
     '주의사항'
   ];
@@ -127,7 +127,7 @@ export function exportToCSV(items: DrugItem[]) {
       item.standard || '',
       item.appearance_info || '',
       item.price_insurance || 0,
-      item.production_2023_won || 0,
+      item.production_2023_won ? formatNumber(item.production_2023_won / 1000000, 1) : 0,
       formatNumber(usage, 3),
       hasWarning ? '원료산정 주의' : ''
     ];
