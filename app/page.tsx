@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DrugItem, searchDrugs } from '@/lib/supabase';
 import { calculateRawMaterialUsage, formatNumber, formatCurrency, exportToCSV } from '@/lib/utils';
+import DataChart from './components/DataChart';
+import ScrollToTop from './components/ScrollToTop';
 
 export default function Home() {
   const [items, setItems] = useState<DrugItem[]>([]);
@@ -13,6 +15,22 @@ export default function Home() {
   // 검색 필터
   const [ingredientFilter, setIngredientFilter] = useState('');
   const [manufacturerFilter, setManufacturerFilter] = useState('');
+
+  // 차트 표시 조건 계산
+  const getChartType = (): { type: 'ingredient' | 'manufacturer' | null; value: string } => {
+    const hasIngredient = ingredientFilter.trim().length > 0;
+    const hasManufacturer = manufacturerFilter.trim().length > 0;
+
+    if (hasIngredient && !hasManufacturer) {
+      return { type: 'ingredient', value: ingredientFilter.trim() };
+    }
+    if (!hasIngredient && hasManufacturer) {
+      return { type: 'manufacturer', value: manufacturerFilter.trim() };
+    }
+    return { type: null, value: '' };
+  };
+
+  const chartInfo = getChartType();
 
   // 로딩 상태
   const [loading, setLoading] = useState(false);
@@ -199,6 +217,17 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* 차트 표시 */}
+      {chartInfo.type && filteredItems.length > 0 && (
+        <div className="container mx-auto px-4">
+          <DataChart
+            items={filteredItems}
+            searchType={chartInfo.type}
+            searchValue={chartInfo.value}
+          />
+        </div>
+      )}
 
       {/* 데이터 리스트 */}
       <div className="container mx-auto px-4 pb-32">
@@ -476,6 +505,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* 맨 위로 버튼 */}
+      <ScrollToTop />
     </div>
   );
 }
