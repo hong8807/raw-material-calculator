@@ -308,12 +308,29 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                    <button
-                      onClick={() => openDetail(item)}
-                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-                    >
-                      상세
-                    </button>
+                    <div className="flex gap-2">
+                      {item.product_code && (
+                        <a
+                          href={`https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetailCache?cacheSeq=${item.product_code}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                          title="의약품안전나라에서 보기"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                          </svg>
+                        </a>
+                      )}
+                      <button
+                        onClick={() => openDetail(item)}
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                      >
+                        상세
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -366,12 +383,29 @@ export default function Home() {
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">상세 정보</h2>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
-                >
-                  ×
-                </button>
+                <div className="flex items-center gap-2">
+                  {selectedItem.product_code && (
+                    <a
+                      href={`https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetailCache?cacheSeq=${selectedItem.product_code}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition"
+                      title="의약품안전나라에서 보기"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                      </svg>
+                    </a>
+                  )}
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-4">
