@@ -16,6 +16,7 @@ export interface DrugItem {
   ingredient_name: string;
   amount: string;
   unit: string;
+  standard?: string; // 규격 정보 추가
   pack_info?: string;
   appearance_info?: string;
   price_insurance?: number;

@@ -221,36 +221,42 @@ export default function Home() {
                     onChange={() => toggleCheck(item.id)}
                     className="w-5 h-5 mt-1 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
                   />
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg text-gray-800 leading-tight">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-base sm:text-lg text-gray-800 leading-tight truncate">
                       {item.ingredient_name}
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">{item.product_name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate" title={item.product_name}>{item.product_name}</p>
                   </div>
                 </div>
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">판매사</span>
-                    <span className="font-medium">{item.company_name}</span>
+                    <span className="text-gray-500 text-xs sm:text-sm">판매사</span>
+                    <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.company_name}>{item.company_name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">생산처</span>
-                    <span className="font-medium">{item.manufacturer_name}</span>
+                    <span className="text-gray-500 text-xs sm:text-sm">생산처</span>
+                    <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.manufacturer_name}>{item.manufacturer_name}</span>
+                  </div>
+                  {item.standard && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-500 text-xs sm:text-sm">규격</span>
+                      <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.standard}>{item.standard}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 text-xs sm:text-sm">분량</span>
+                    <span className="font-medium text-xs sm:text-sm">{item.amount} {item.unit}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">분량</span>
-                    <span className="font-medium">{item.amount} {item.unit}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">보험약가</span>
-                    <span className="font-medium">
+                    <span className="text-gray-500 text-xs sm:text-sm">보험약가</span>
+                    <span className="font-medium text-xs sm:text-sm">
                       {item.price_insurance ? formatCurrency(item.price_insurance) : '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">생산실적</span>
-                    <span className="font-medium">
+                    <span className="text-gray-500 text-xs sm:text-sm">생산실적</span>
+                    <span className="font-medium text-xs sm:text-sm">
                       {item.production_2023_won ? formatCurrency(item.production_2023_won) : '-'}
                     </span>
                   </div>
@@ -287,16 +293,16 @@ export default function Home() {
 
       {/* 하단 고정 바 */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-2xl border-t border-gray-200">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 sm:gap-6">
               <div>
-                <div className="text-xs text-gray-500">선택 항목</div>
-                <div className="text-lg font-bold">{selectedItems.length}개</div>
+                <div className="text-xs text-gray-500">선택</div>
+                <div className="text-sm sm:text-lg font-bold">{selectedItems.length}개</div>
               </div>
               <div>
                 <div className="text-xs text-gray-500">총 원료량</div>
-                <div className="text-xl font-bold text-indigo-600">
+                <div className="text-base sm:text-xl font-bold text-indigo-600">
                   {formatNumber(totalUsage, 3)} kg
                 </div>
               </div>
@@ -304,7 +310,7 @@ export default function Home() {
             <button
               onClick={() => selectedItems.length > 0 && exportToCSV(selectedItems)}
               disabled={selectedItems.length === 0}
-              className={`px-6 py-3 rounded-xl font-medium transition ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition ${
                 selectedItems.length > 0
                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg transform hover:scale-105'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -362,6 +368,12 @@ export default function Home() {
                       <span className="text-gray-600">분량/단위:</span>
                       <p className="font-medium text-gray-900">{selectedItem.amount} {selectedItem.unit}</p>
                     </div>
+                    {selectedItem.standard && (
+                      <div className="col-span-2">
+                        <span className="text-gray-600">규격:</span>
+                        <p className="font-medium text-gray-900">{selectedItem.standard}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -433,11 +445,6 @@ export default function Home() {
                   <div className="text-2xl font-bold text-green-600">
                     원료 사용량: {formatNumber(calculateRawMaterialUsage(selectedItem), 3)} kg
                   </div>
-                  {selectedItem.price_insurance && selectedItem.production_2023_won && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      생산량: {formatNumber(selectedItem.production_2023_won / selectedItem.price_insurance, 0)} 포장
-                    </div>
-                  )}
                 </div>
               </div>
 
