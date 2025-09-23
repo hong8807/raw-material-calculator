@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💊 원료 사용량 계산기 PWA
 
-## Getting Started
+의약품 원료 사용량을 계산하는 모바일 최적화 PWA 앱입니다.
 
-First, run the development server:
+## 🌐 배포 URL
 
+**Production**: https://raw-material-calculator-next.vercel.app/
+
+## 📱 주요 기능
+
+- ✅ 성분명/실생산처 검색
+- ✅ 체크박스 선택 (전체 선택 포함)
+- ✅ 원료 사용량 자동 계산 (kg 변환)
+- ✅ CSV 내보내기
+- ✅ 모바일 반응형 디자인
+- ✅ PWA 지원 (홈 화면 설치)
+
+## 🚀 빠른 시작
+
+### 로컬 개발
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# http://localhost:3000 에서 확인
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 배포
+```bash
+vercel --prod
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📲 모바일 설치 가이드
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Android (Chrome)
+1. Chrome에서 https://raw-material-calculator-next.vercel.app/ 접속
+2. 메뉴(⋮) → "앱 설치" 또는 "홈 화면에 추가"
+3. 홈 화면에서 앱 아이콘으로 실행
 
-## Learn More
+### iOS (Safari)
+1. **Safari**에서 https://raw-material-calculator-next.vercel.app/ 접속
+2. 공유 버튼(□↑) → "홈 화면에 추가"
+3. 홈 화면에서 앱 아이콘으로 실행
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ 기술 스택
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js 15.5.3
+- TypeScript
+- Tailwind CSS
+- PWA (manifest.json)
+- Vercel Hosting
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 프로젝트 구조
 
-## Deploy on Vercel
+```
+raw-material-calculator-next/
+├── app/
+│   ├── page.tsx          # 메인 페이지 컴포넌트
+│   ├── layout.tsx        # 레이아웃 설정
+│   └── globals.css       # 전역 스타일
+├── public/
+│   ├── manifest.json     # PWA 설정
+│   └── icon-*.png        # 앱 아이콘
+├── next.config.js        # Next.js 설정
+└── package.json          # 의존성 관리
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 상세 문서
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+더 자세한 정보는 [README_DEPLOYMENT.md](./README_DEPLOYMENT.md)를 참고해주세요.
+
+---
+**Version**: 1.0.0
+**Last Updated**: 2025-09-23
