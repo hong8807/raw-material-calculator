@@ -92,6 +92,38 @@ export function formatCurrency(num: number): string {
   }).format(num);
 }
 
+// 생산실적 포맷팅 함수 (억원/백만원 자동 변환)
+export function formatProduction(wonAmount: number): string {
+  if (!wonAmount || wonAmount === 0) return '-';
+
+  const million = wonAmount / 1000000;
+
+  // 10억원 (1,000백만원) 이상이면 억원 단위로 표시
+  if (million >= 1000) {
+    const billion = million / 100;
+    return `${formatNumber(billion, 0)}억원`;
+  }
+
+  // 그 외에는 백만원 단위로 표시
+  return `${formatNumber(million, 0)}백만원`;
+}
+
+// 짧은 생산실적 포맷팅 (M, 억 단위)
+export function formatProductionShort(wonAmount: number): string {
+  if (!wonAmount || wonAmount === 0) return '-';
+
+  const million = wonAmount / 1000000;
+
+  // 10억원 (1,000백만원) 이상이면 억 단위로 표시
+  if (million >= 1000) {
+    const billion = million / 100;
+    return `${formatNumber(billion, 0)}억`;
+  }
+
+  // 그 외에는 M(백만원) 단위로 표시
+  return `${formatNumber(million, 0)}M`;
+}
+
 // CSV 내보내기 함수
 export function exportToCSV(items: DrugItem[]) {
   const headers = [
@@ -106,7 +138,7 @@ export function exportToCSV(items: DrugItem[]) {
     '규격',
     '성상정보',
     '보험약가',
-    '생산실적(백만원)',
+    '생산실적',
     '원료사용량(kg)',
     '주의사항'
   ];
@@ -127,7 +159,7 @@ export function exportToCSV(items: DrugItem[]) {
       item.standard || '',
       item.appearance_info || '',
       item.price_insurance || 0,
-      item.production_2023_won ? formatNumber(item.production_2023_won / 1000000, 0) : 0,
+      item.production_2023_won ? formatProduction(item.production_2023_won) : '-',
       formatNumber(usage, 3),
       hasWarning ? '원료산정 주의' : ''
     ];

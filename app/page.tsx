@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { DrugItem, searchDrugs } from '@/lib/supabase';
-import { calculateRawMaterialUsage, formatNumber, formatCurrency, exportToCSV } from '@/lib/utils';
+import { calculateRawMaterialUsage, formatNumber, formatCurrency, formatProduction, formatProductionShort, exportToCSV } from '@/lib/utils';
 import DataChart from './components/DataChart';
 import ChartModal from './components/ChartModal';
 import ScrollToTop from './components/ScrollToTop';
@@ -260,7 +260,7 @@ export default function Home() {
                 </h3>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-gray-500">
-                    합계: {formatNumber(manufacturersByProduction.reduce((sum, item) => sum + item.production, 0) / 1000000, 0)}백만원
+                    합계: {formatProduction(manufacturersByProduction.reduce((sum, item) => sum + item.production, 0))}
                   </span>
                   {manufacturersByProduction.length > 20 && (
                     <button
@@ -293,12 +293,12 @@ export default function Home() {
                           ? 'bg-indigo-100 border-indigo-400 ring-2 ring-indigo-300'
                           : 'bg-gray-50 hover:bg-indigo-50 border-gray-200 hover:border-indigo-300'
                       }`}
-                      title={`${item.name}\n생산실적: ${formatNumber(item.production / 1000000, 0)}백만원`}
+                      title={`${item.name}\n생산실적: ${formatProduction(item.production)}`}
                     >
                       <div className="flex items-start justify-between">
                         <span className="text-[10px] font-semibold text-gray-500">#{index + 1}</span>
                         <span className="text-[10px] text-indigo-600 font-medium whitespace-nowrap">
-                          {formatNumber(item.production / 1000000, 0)}M
+                          {formatProductionShort(item.production)}
                         </span>
                       </div>
                       <div className={`font-medium text-gray-800 leading-tight break-keep ${textSizeClass}`}>
@@ -462,7 +462,7 @@ export default function Home() {
                   <div className="flex justify-between">
                     <span className="text-gray-500 text-xs sm:text-sm">생산실적</span>
                     <span className="font-medium text-xs sm:text-sm">
-                      {item.production_2023_won ? `${formatNumber(item.production_2023_won / 1000000, 0)}백만원` : '-'}
+                      {formatProduction(item.production_2023_won)}
                     </span>
                   </div>
                 </div>
@@ -756,8 +756,8 @@ export default function Home() {
                     </div>
                     <div>
                       <span className="text-gray-600 block">생산실적 (2023):</span>
-                      <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 0)}백만원` : '-'}>
-                        {selectedItem.production_2023_won ? `${formatNumber(selectedItem.production_2023_won / 1000000, 0)}백만원` : '-'}
+                      <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={formatProduction(selectedItem.production_2023_won)}>
+                        {formatProduction(selectedItem.production_2023_won)}
                       </p>
                     </div>
                   </div>
