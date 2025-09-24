@@ -137,7 +137,7 @@ export default function ChartModal({
                       }}
                     />
                   </div>
-                  <div className="mt-4 text-sm text-gray-600">
+                  <div className="mt-4 text-sm text-gray-700 font-medium">
                     <p>총 {tabletData.length}개 업체 표시</p>
                     <p>총 원료 사용량: {formatNumber(
                       tabletData.reduce((sum, [, data]) => sum + data.tablet, 0), 2
@@ -191,7 +191,7 @@ export default function ChartModal({
                       }}
                     />
                   </div>
-                  <div className="mt-4 text-sm text-gray-600">
+                  <div className="mt-4 text-sm text-gray-700 font-medium">
                     <p>총 {otherData.length}개 업체 표시</p>
                     <p>총 생산실적: {formatCurrency(
                       otherData.reduce((sum, [, data]) => sum + data.other, 0)
@@ -314,7 +314,7 @@ export default function ChartModal({
                                 : item.productName}
                             </span>
                           </td>
-                          <td className="px-3 py-2 text-xs text-gray-600">
+                          <td className="px-3 py-2 text-xs text-gray-700 font-medium">
                             {item.ingredientName}
                           </td>
                           <td className="px-3 py-2 text-right font-medium">

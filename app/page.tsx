@@ -206,10 +206,10 @@ export default function Home() {
               <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
                 원료 사용량 산정 계산기
               </h1>
-              <p className="text-sm text-gray-600 mt-1">의약품 원료 사용량 계산 시스템</p>
+              <p className="text-sm text-gray-700 font-medium mt-1">의약품 원료 사용량 계산 시스템</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500">데이터 수</div>
+              <div className="text-sm text-gray-700 font-medium">데이터 수</div>
               <div className="text-lg font-bold text-indigo-600">
                 {formatNumber(filteredItems.length, 0)} / {formatNumber(items.length, 0)}
               </div>
@@ -259,7 +259,7 @@ export default function Home() {
                   실생산처별 생산실적 (총 {manufacturersByProduction.length}개 업체)
                 </h3>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-700 font-medium">
                     합계: {formatProduction(manufacturersByProduction.reduce((sum, item) => sum + item.production, 0))}
                   </span>
                   {manufacturersByProduction.length > 20 && (
@@ -296,7 +296,7 @@ export default function Home() {
                       title={`${item.name}\n생산실적: ${formatProduction(item.production)}`}
                     >
                       <div className="flex items-start justify-between">
-                        <span className="text-[10px] font-semibold text-gray-500">#{index + 1}</span>
+                        <span className="text-[10px] font-semibold text-gray-700">#{index + 1}</span>
                         <span className="text-[10px] text-indigo-600 font-medium whitespace-nowrap">
                           {formatProductionShort(item.production)}
                         </span>
@@ -308,7 +308,7 @@ export default function Home() {
                   );
                 })}
               </div>
-              <p className="mt-3 text-xs text-gray-500">
+              <p className="mt-3 text-xs text-gray-700 font-medium">
                 * 클릭하면 해당 실생산처로 필터링됩니다
                 {!showAllManufacturers && manufacturersByProduction.length > 20 &&
                   ` (상위 20개 표시 중)`
@@ -350,7 +350,7 @@ export default function Home() {
               <span className="text-gray-700 font-medium">
                 현재 페이지 선택
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-700 font-medium">
                 ({checkedItems.size}개 선택됨 / 전체 {filteredItems.length}개)
               </span>
               {checkedItems.size === filteredItems.length && filteredItems.length > 0 && (
@@ -430,37 +430,37 @@ export default function Home() {
                     <h3 className="font-bold text-base sm:text-lg text-gray-800 leading-tight truncate">
                       {item.ingredient_name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate" title={item.product_name}>{item.product_name}</p>
+                    <p className="text-xs sm:text-sm text-gray-700 font-medium mt-1 truncate" title={item.product_name}>{item.product_name}</p>
                   </div>
                 </div>
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500 text-xs sm:text-sm">판매사</span>
+                    <span className="text-gray-700 text-xs sm:text-sm">판매사</span>
                     <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.company_name}>{item.company_name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 text-xs sm:text-sm">생산처</span>
+                    <span className="text-gray-700 text-xs sm:text-sm">생산처</span>
                     <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.manufacturer_name}>{item.manufacturer_name}</span>
                   </div>
                   {item.standard && (
                     <div className="flex justify-between">
-                      <span className="text-gray-500 text-xs sm:text-sm">규격</span>
+                      <span className="text-gray-700 text-xs sm:text-sm">규격</span>
                       <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.standard}>{item.standard}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-gray-500 text-xs sm:text-sm">분량</span>
+                    <span className="text-gray-700 text-xs sm:text-sm">분량</span>
                     <span className="font-medium text-xs sm:text-sm">{item.amount} {item.unit}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 text-xs sm:text-sm">보험약가</span>
+                    <span className="text-gray-700 text-xs sm:text-sm">보험약가</span>
                     <span className="font-medium text-xs sm:text-sm">
                       {item.price_insurance ? formatCurrency(item.price_insurance) : '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 text-xs sm:text-sm">생산실적</span>
+                    <span className="text-gray-700 text-xs sm:text-sm">생산실적</span>
                     <span className="font-medium text-xs sm:text-sm">
                       {formatProduction(item.production_2023_won)}
                     </span>
@@ -470,8 +470,8 @@ export default function Home() {
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <div className="flex-1">
-                      <div className="text-xs text-gray-500">원료 사용량</div>
-                      <div className={`text-lg font-bold ${usage > 0 ? 'text-indigo-600' : 'text-gray-400'}`}>
+                      <div className="text-xs text-gray-700">원료 사용량</div>
+                      <div className={`text-lg font-bold ${usage > 0 ? 'text-indigo-600' : 'text-gray-600'}`}>
                         {usage > 0 ? `${formatNumber(usage, 3)} kg` :
                          !isCalculable ? '계산 불가' : '0 kg'}
                       </div>
@@ -514,7 +514,7 @@ export default function Home() {
         {/* 페이지네이션 */}
         {totalPages > 1 && (
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-700 font-medium">
               전체 {filteredItems.length}개 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredItems.length)}개 표시
             </div>
             <div className="flex items-center gap-2">
@@ -547,7 +547,7 @@ export default function Home() {
                     >
                       1
                     </button>
-                    {currentPage > 3 && <span className="px-2 text-gray-400">...</span>}
+                    {currentPage > 3 && <span className="px-2 text-gray-600 font-medium">...</span>}
                   </>
                 )}
 
@@ -581,7 +581,7 @@ export default function Home() {
 
                 {currentPage < totalPages - 1 && (
                   <>
-                    {currentPage < totalPages - 2 && <span className="px-2 text-gray-400">...</span>}
+                    {currentPage < totalPages - 2 && <span className="px-2 text-gray-600 font-medium">...</span>}
                     <button
                       onClick={() => {
                         setCurrentPage(totalPages);
@@ -613,7 +613,7 @@ export default function Home() {
 
               {/* 페이지 직접 입력 */}
               <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm text-gray-600">페이지</span>
+                <span className="text-sm text-gray-700 font-medium">페이지</span>
                 <input
                   type="number"
                   min="1"
@@ -628,7 +628,7 @@ export default function Home() {
                   }}
                   className="w-16 px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
-                <span className="text-sm text-gray-600">/ {totalPages}</span>
+                <span className="text-sm text-gray-700 font-medium">/ {totalPages}</span>
               </div>
             </div>
           </div>
@@ -636,7 +636,7 @@ export default function Home() {
 
         {filteredItems.length === 0 && !loading && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">검색 결과가 없습니다.</p>
+            <p className="text-gray-700 font-medium text-lg">검색 결과가 없습니다.</p>
           </div>
         )}
       </div>
@@ -647,11 +647,11 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 sm:gap-6">
               <div>
-                <div className="text-xs text-gray-500">선택</div>
+                <div className="text-xs text-gray-700 font-medium">선택</div>
                 <div className="text-sm sm:text-lg font-bold">{selectedItems.length}개</div>
               </div>
               <div>
-                <div className="text-xs text-gray-500">총 원료량</div>
+                <div className="text-xs text-gray-700 font-medium">총 원료량</div>
                 <div className="text-base sm:text-xl font-bold text-indigo-600">
                   {formatNumber(totalUsage, 3)} kg
                 </div>
@@ -697,7 +697,7 @@ export default function Home() {
                   )}
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                    className="text-gray-600 hover:text-gray-800 text-2xl"
                   >
                     ×
                   </button>
@@ -712,32 +712,32 @@ export default function Home() {
                   </h3>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-600">제품명:</span>
+                      <span className="text-gray-700 font-medium">제품명:</span>
                       <p className="font-medium text-gray-900">{selectedItem.product_name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600">품목코드:</span>
+                      <span className="text-gray-700 font-medium">품목코드:</span>
                       <p className="font-medium text-gray-900">{selectedItem.product_code}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600">판매사:</span>
+                      <span className="text-gray-700 font-medium">판매사:</span>
                       <p className="font-medium text-gray-900">{selectedItem.company_name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600">생산처:</span>
+                      <span className="text-gray-700 font-medium">생산처:</span>
                       <p className="font-medium text-gray-900">{selectedItem.manufacturer_name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600">전문/일반:</span>
+                      <span className="text-gray-700 font-medium">전문/일반:</span>
                       <p className="font-medium text-gray-900">{selectedItem.rx_otc || '-'}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600">분량/단위:</span>
+                      <span className="text-gray-700 font-medium">분량/단위:</span>
                       <p className="font-medium text-gray-900">{selectedItem.amount} {selectedItem.unit}</p>
                     </div>
                     {selectedItem.standard && (
                       <div className="col-span-2">
-                        <span className="text-gray-600">규격:</span>
+                        <span className="text-gray-700 font-medium">규격:</span>
                         <p className="font-medium text-gray-900">{selectedItem.standard}</p>
                       </div>
                     )}
@@ -749,13 +749,13 @@ export default function Home() {
                   <h4 className="font-bold mb-3 text-blue-700">생산/가격 정보</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-600 block">보험약가:</span>
+                      <span className="text-gray-700 block font-medium">보험약가:</span>
                       <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={selectedItem.price_insurance ? formatCurrency(selectedItem.price_insurance) : '-'}>
                         {selectedItem.price_insurance ? formatCurrency(selectedItem.price_insurance) : '-'}
                       </p>
                     </div>
                     <div>
-                      <span className="text-gray-600 block">생산실적 (2023):</span>
+                      <span className="text-gray-700 block font-medium">생산실적 (2023):</span>
                       <p className="font-bold text-base sm:text-lg text-gray-900 truncate" title={formatProduction(selectedItem.production_2023_won)}>
                         {formatProduction(selectedItem.production_2023_won)}
                       </p>
@@ -769,37 +769,37 @@ export default function Home() {
                   <div className="space-y-2 text-sm">
                     {selectedItem.pack_info && (
                       <div>
-                        <span className="text-gray-600">포장정보:</span>
+                        <span className="text-gray-700 font-medium">포장정보:</span>
                         <p className="font-medium text-gray-900">{selectedItem.pack_info}</p>
                       </div>
                     )}
                     {selectedItem.appearance_info && (
                       <div>
-                        <span className="text-gray-600">성상정보:</span>
+                        <span className="text-gray-700 font-medium">성상정보:</span>
                         <p className="font-medium text-gray-900">{selectedItem.appearance_info}</p>
                       </div>
                     )}
                     {selectedItem.storage_method && (
                       <div>
-                        <span className="text-gray-600">저장방법:</span>
+                        <span className="text-gray-700 font-medium">저장방법:</span>
                         <p className="font-medium text-gray-900">{selectedItem.storage_method}</p>
                       </div>
                     )}
                     {selectedItem.usage_period && (
                       <div>
-                        <span className="text-gray-600">사용기간:</span>
+                        <span className="text-gray-700 font-medium">사용기간:</span>
                         <p className="font-medium text-gray-900">{selectedItem.usage_period}</p>
                       </div>
                     )}
                     {selectedItem.atc_code && (
                       <div>
-                        <span className="text-gray-600">ATC 코드:</span>
+                        <span className="text-gray-700 font-medium">ATC 코드:</span>
                         <p className="font-medium text-gray-900">{selectedItem.atc_code}</p>
                       </div>
                     )}
                     {selectedItem.permit_date && (
                       <div>
-                        <span className="text-gray-600">허가일자:</span>
+                        <span className="text-gray-700 font-medium">허가일자:</span>
                         <p className="font-medium text-gray-900">{selectedItem.permit_date}</p>
                       </div>
                     )}
