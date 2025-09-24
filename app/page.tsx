@@ -45,6 +45,7 @@ export default function Home() {
   // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+  const [showAllManufacturers, setShowAllManufacturers] = useState(false);
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -116,6 +117,7 @@ export default function Home() {
       }));
       setFilteredItems(itemsWithId);
       setCurrentPage(1); // 검색 시 첫 페이지로 이동
+      setShowAllManufacturers(false); // 검색 변경 시 목록 접기
     } catch (err) {
       console.error('검색 오류:', err);
       setError('검색 중 오류가 발생했습니다.');
@@ -191,8 +193,7 @@ export default function Home() {
 
     return Array.from(manufacturerMap.entries())
       .map(([name, production]) => ({ name, production }))
-      .sort((a, b) => b.production - a.production)
-      .slice(0, 20); // 상위 20개만 표시
+      .sort((a, b) => b.production - a.production); // 모든 업체 포함
   }, [filteredItems, ingredientFilter, manufacturerFilter]);
 
   return (
@@ -255,42 +256,63 @@ export default function Home() {
             <div className="mt-6">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-gray-700">
-                  실생산처별 생산실적 (상위 20개)
+                  실생산처별 생산실적 (총 {manufacturersByProduction.length}개 업체)
                 </h3>
-                <span className="text-xs text-gray-500">
-                  총 {manufacturersByProduction.length}개 업체 |
-                  합계: {formatNumber(manufacturersByProduction.reduce((sum, item) => sum + item.production, 0) / 1000000, 0)}백만원
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-500">
+                    합계: {formatNumber(manufacturersByProduction.reduce((sum, item) => sum + item.production, 0) / 1000000, 0)}백만원
+                  </span>
+                  {manufacturersByProduction.length > 20 && (
+                    <button
+                      onClick={() => setShowAllManufacturers(!showAllManufacturers)}
+                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                    >
+                      {showAllManufacturers ? '접기 ▲' : `전체 보기 (${manufacturersByProduction.length}개) ▼`}
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                {manufacturersByProduction.map((item, index) => (
-                  <button
-                    key={item.name}
-                    onClick={() => {
-                      setManufacturerFilter(item.name);
-                      setCurrentPage(1);
-                    }}
-                    className={`text-left p-2 rounded-lg transition-colors border ${
-                      manufacturerFilter === item.name
-                        ? 'bg-indigo-100 border-indigo-400 ring-2 ring-indigo-300'
-                        : 'bg-gray-50 hover:bg-indigo-50 border-gray-200 hover:border-indigo-300'
-                    }`}
-                    title={`생산실적: ${formatNumber(item.production / 1000000, 0)}백만원`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <span className="text-xs font-semibold text-gray-500">#{index + 1}</span>
-                      <span className="text-xs text-indigo-600 font-medium">
-                        {formatNumber(item.production / 1000000, 0)}M
-                      </span>
-                    </div>
-                    <div className="mt-1 text-sm font-medium text-gray-800 line-clamp-2">
-                      {item.name}
-                    </div>
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                {(showAllManufacturers ? manufacturersByProduction : manufacturersByProduction.slice(0, 20)).map((item, index) => {
+                  // 회사명 길이에 따른 글자 크기 조정
+                  const nameLength = item.name.length;
+                  let textSizeClass = 'text-sm';
+                  if (nameLength > 12) textSizeClass = 'text-xs';
+                  if (nameLength > 16) textSizeClass = 'text-[11px]';
+                  if (nameLength > 20) textSizeClass = 'text-[10px]';
+
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => {
+                        setManufacturerFilter(item.name);
+                        setCurrentPage(1);
+                      }}
+                      className={`text-left p-2 h-[72px] rounded-lg transition-colors border flex flex-col justify-between ${
+                        manufacturerFilter === item.name
+                          ? 'bg-indigo-100 border-indigo-400 ring-2 ring-indigo-300'
+                          : 'bg-gray-50 hover:bg-indigo-50 border-gray-200 hover:border-indigo-300'
+                      }`}
+                      title={`${item.name}\n생산실적: ${formatNumber(item.production / 1000000, 0)}백만원`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <span className="text-[10px] font-semibold text-gray-500">#{index + 1}</span>
+                        <span className="text-[10px] text-indigo-600 font-medium whitespace-nowrap">
+                          {formatNumber(item.production / 1000000, 0)}M
+                        </span>
+                      </div>
+                      <div className={`font-medium text-gray-800 leading-tight break-keep ${textSizeClass}`}>
+                        {item.name}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
               <p className="mt-3 text-xs text-gray-500">
                 * 클릭하면 해당 실생산처로 필터링됩니다
+                {!showAllManufacturers && manufacturersByProduction.length > 20 &&
+                  ` (상위 20개 표시 중)`
+                }
               </p>
             </div>
           )}
