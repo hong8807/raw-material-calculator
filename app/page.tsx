@@ -436,32 +436,32 @@ export default function Home() {
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-700 text-xs sm:text-sm">판매사</span>
-                    <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.company_name}>{item.company_name}</span>
+                    <span className="text-gray-900 font-semibold text-xs sm:text-sm">판매사</span>
+                    <span className="font-bold text-gray-900 text-xs sm:text-sm truncate max-w-[60%]" title={item.company_name}>{item.company_name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-700 text-xs sm:text-sm">생산처</span>
-                    <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.manufacturer_name}>{item.manufacturer_name}</span>
+                    <span className="text-gray-900 font-semibold text-xs sm:text-sm">생산처</span>
+                    <span className="font-bold text-gray-900 text-xs sm:text-sm truncate max-w-[60%]" title={item.manufacturer_name}>{item.manufacturer_name}</span>
                   </div>
                   {item.standard && (
                     <div className="flex justify-between">
-                      <span className="text-gray-700 text-xs sm:text-sm">규격</span>
-                      <span className="font-medium text-xs sm:text-sm truncate max-w-[60%]" title={item.standard}>{item.standard}</span>
+                      <span className="text-gray-900 font-semibold text-xs sm:text-sm">규격</span>
+                      <span className="font-bold text-gray-900 text-xs sm:text-sm truncate max-w-[60%]" title={item.standard}>{item.standard}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-gray-700 text-xs sm:text-sm">분량</span>
-                    <span className="font-medium text-xs sm:text-sm">{item.amount} {item.unit}</span>
+                    <span className="text-gray-900 font-semibold text-xs sm:text-sm">분량</span>
+                    <span className="font-bold text-gray-900 text-xs sm:text-sm">{item.amount} {item.unit}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-700 text-xs sm:text-sm">보험약가</span>
-                    <span className="font-medium text-xs sm:text-sm">
+                    <span className="text-gray-900 font-semibold text-xs sm:text-sm">보험약가</span>
+                    <span className="font-bold text-gray-900 text-xs sm:text-sm">
                       {item.price_insurance ? formatCurrency(item.price_insurance) : '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-700 text-xs sm:text-sm">생산실적</span>
-                    <span className="font-medium text-xs sm:text-sm">
+                    <span className="text-gray-900 font-semibold text-xs sm:text-sm">생산실적</span>
+                    <span className="font-bold text-gray-900 text-xs sm:text-sm">
                       {formatProduction(item.production_2023_won)}
                     </span>
                   </div>
@@ -470,7 +470,7 @@ export default function Home() {
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <div className="flex-1">
-                      <div className="text-xs text-gray-700">원료 사용량</div>
+                      <div className="text-xs text-gray-900 font-semibold">원료 사용량</div>
                       <div className={`text-lg font-bold ${usage > 0 ? 'text-indigo-600' : 'text-gray-600'}`}>
                         {usage > 0 ? `${formatNumber(usage, 3)} kg` :
                          !isCalculable ? '계산 불가' : '0 kg'}
