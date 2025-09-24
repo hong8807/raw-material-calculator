@@ -18,6 +18,10 @@ export default function Home() {
   const [ingredientFilter, setIngredientFilter] = useState('');
   const [manufacturerFilter, setManufacturerFilter] = useState('');
 
+  // 페이지네이션 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 50; // 한 페이지당 50개 아이템
+
   // 차트 표시 조건 계산
   const getChartType = (): { type: 'ingredient' | 'manufacturer' | null; value: string } => {
     const hasIngredient = ingredientFilter.trim().length > 0;
@@ -41,6 +45,14 @@ export default function Home() {
   // 모달 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const paginatedItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredItems.slice(startIndex, endIndex);
+  }, [filteredItems, currentPage, itemsPerPage]);
 
   // 유니크한 성분명 리스트 생성
   const uniqueIngredients = useMemo(() => {
@@ -103,6 +115,7 @@ export default function Home() {
         id: item.id
       }));
       setFilteredItems(itemsWithId);
+      setCurrentPage(1); // 검색 시 첫 페이지로 이동
     } catch (err) {
       console.error('검색 오류:', err);
       setError('검색 중 오류가 발생했습니다.');
@@ -131,12 +144,21 @@ export default function Home() {
     setCheckedItems(newChecked);
   };
 
-  // 전체 선택/해제
+  // 현재 페이지 전체 선택/해제
   const toggleAllChecks = () => {
-    if (checkedItems.size === filteredItems.length) {
-      setCheckedItems(new Set());
+    const currentPageIds = new Set(paginatedItems.map(item => item.id));
+    const allCurrentPageChecked = paginatedItems.every(item => checkedItems.has(item.id));
+
+    if (allCurrentPageChecked) {
+      // 현재 페이지 아이템들만 체크 해제
+      const newChecked = new Set(checkedItems);
+      currentPageIds.forEach(id => newChecked.delete(id));
+      setCheckedItems(newChecked);
     } else {
-      setCheckedItems(new Set(filteredItems.map(item => item.id)));
+      // 현재 페이지 아이템들 체크
+      const newChecked = new Set(checkedItems);
+      currentPageIds.forEach(id => newChecked.add(id));
+      setCheckedItems(newChecked);
     }
   };
 
@@ -222,12 +244,12 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <input
               type="checkbox"
-              checked={checkedItems.size === filteredItems.length && filteredItems.length > 0}
+              checked={paginatedItems.length > 0 && paginatedItems.every(item => checkedItems.has(item.id))}
               onChange={toggleAllChecks}
               className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
             />
             <span className="text-gray-700 font-medium">
-              전체 선택 ({checkedItems.size}/{filteredItems.length})
+              현재 페이지 선택 ({checkedItems.size}개 선택됨) | 전체 {filteredItems.length}개
             </span>
           </div>
         </div>
@@ -248,7 +270,7 @@ export default function Home() {
       {/* 데이터 리스트 */}
       <div className="container mx-auto px-4 pb-32">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredItems.map((item) => {
+          {paginatedItems.map((item) => {
             const usage = calculateRawMaterialUsage(item);
             const isCalculable = item.price_insurance && item.production_2023_won;
 
@@ -350,6 +372,129 @@ export default function Home() {
             );
           })}
         </div>
+
+        {/* 페이지네이션 */}
+        {totalPages > 1 && (
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-gray-600">
+              전체 {filteredItems.length}개 중 {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, filteredItems.length)}개 표시
+            </div>
+            <div className="flex items-center gap-2">
+              {/* 이전 페이지 */}
+              <button
+                onClick={() => {
+                  setCurrentPage(prev => Math.max(1, prev - 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                disabled={currentPage === 1}
+                className={`px-3 py-2 rounded-lg transition ${
+                  currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                }`}
+              >
+                이전
+              </button>
+
+              {/* 페이지 번호 */}
+              <div className="flex items-center gap-1">
+                {currentPage > 2 && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setCurrentPage(1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-3 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 shadow-md transition"
+                    >
+                      1
+                    </button>
+                    {currentPage > 3 && <span className="px-2 text-gray-400">...</span>}
+                  </>
+                )}
+
+                {currentPage > 1 && (
+                  <button
+                    onClick={() => {
+                      setCurrentPage(currentPage - 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-3 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 shadow-md transition"
+                  >
+                    {currentPage - 1}
+                  </button>
+                )}
+
+                <button className="px-3 py-2 rounded-lg bg-indigo-600 text-white shadow-md">
+                  {currentPage}
+                </button>
+
+                {currentPage < totalPages && (
+                  <button
+                    onClick={() => {
+                      setCurrentPage(currentPage + 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-3 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 shadow-md transition"
+                  >
+                    {currentPage + 1}
+                  </button>
+                )}
+
+                {currentPage < totalPages - 1 && (
+                  <>
+                    {currentPage < totalPages - 2 && <span className="px-2 text-gray-400">...</span>}
+                    <button
+                      onClick={() => {
+                        setCurrentPage(totalPages);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-3 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 shadow-md transition"
+                    >
+                      {totalPages}
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* 다음 페이지 */}
+              <button
+                onClick={() => {
+                  setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-2 rounded-lg transition ${
+                  currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+                }`}
+              >
+                다음
+              </button>
+
+              {/* 페이지 직접 입력 */}
+              <div className="flex items-center gap-2 ml-4">
+                <span className="text-sm text-gray-600">페이지</span>
+                <input
+                  type="number"
+                  min="1"
+                  max={totalPages}
+                  value={currentPage}
+                  onChange={(e) => {
+                    const page = parseInt(e.target.value);
+                    if (page >= 1 && page <= totalPages) {
+                      setCurrentPage(page);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-16 px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                <span className="text-sm text-gray-600">/ {totalPages}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {filteredItems.length === 0 && !loading && (
           <div className="text-center py-12">
