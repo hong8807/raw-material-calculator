@@ -240,17 +240,57 @@ export default function Home() {
 
       {/* 전체 선택 바 */}
       <div className="container mx-auto px-4 mb-4">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <input
-              type="checkbox"
-              checked={paginatedItems.length > 0 && paginatedItems.every(item => checkedItems.has(item.id))}
-              onChange={toggleAllChecks}
-              className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
-            />
-            <span className="text-gray-700 font-medium">
-              현재 페이지 선택 ({checkedItems.size}개 선택됨) | 전체 {filteredItems.length}개
-            </span>
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md px-6 py-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-4">
+              <input
+                type="checkbox"
+                checked={paginatedItems.length > 0 && paginatedItems.every(item => checkedItems.has(item.id))}
+                onChange={toggleAllChecks}
+                className="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500"
+              />
+              <span className="text-gray-700 font-medium">
+                현재 페이지 선택
+              </span>
+              <span className="text-sm text-gray-500">
+                ({checkedItems.size}개 선택됨 / 전체 {filteredItems.length}개)
+              </span>
+              {checkedItems.size === filteredItems.length && filteredItems.length > 0 && (
+                <span className="text-sm font-semibold text-green-600">
+                  ✓ 전체 선택됨
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  // 전체 검색 결과 선택
+                  setCheckedItems(new Set(filteredItems.map(item => item.id)));
+                }}
+                disabled={checkedItems.size === filteredItems.length && filteredItems.length > 0}
+                className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+                  checkedItems.size === filteredItems.length && filteredItems.length > 0
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                전체 {filteredItems.length}개 모두 선택
+              </button>
+              <button
+                onClick={() => {
+                  // 전체 선택 해제
+                  setCheckedItems(new Set());
+                }}
+                disabled={checkedItems.size === 0}
+                className={`px-4 py-2 rounded-lg transition text-sm font-medium ${
+                  checkedItems.size === 0
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                선택 해제
+              </button>
+            </div>
           </div>
         </div>
       </div>
