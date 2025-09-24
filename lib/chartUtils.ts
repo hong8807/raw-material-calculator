@@ -1,5 +1,5 @@
 import { DrugItem } from './supabase';
-import { calculateRawMaterialUsage, formatNumber } from './utils';
+import { calculateRawMaterialUsage } from './utils';
 
 // 실생산처별 데이터 집계 (성분명 검색 시)
 export function aggregateByManufacturer(items: DrugItem[], limit: number = 10) {
@@ -29,12 +29,12 @@ export function aggregateByManufacturer(items: DrugItem[], limit: number = 10) {
 
   // 지정된 개수만큼 데이터 반환
   const tabletData = Array.from(manufacturerData.entries())
-    .filter(([_, data]) => data.tablet > 0)
+    .filter(([, data]) => data.tablet > 0)
     .sort((a, b) => b[1].tablet - a[1].tablet)
     .slice(0, limit);
 
   const otherData = Array.from(manufacturerData.entries())
-    .filter(([_, data]) => data.other > 0)
+    .filter(([, data]) => data.other > 0)
     .sort((a, b) => b[1].other - a[1].other)
     .slice(0, limit);
 

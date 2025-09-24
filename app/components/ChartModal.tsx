@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import {
   Chart as ChartJS,
@@ -42,7 +42,6 @@ export default function ChartModal({
   searchType,
   searchValue
 }: ChartModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -69,7 +68,6 @@ export default function ChartModal({
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
         <div
-          ref={modalRef}
           className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden"
         >
           <div className="p-6 border-b border-gray-200 flex items-center justify-between">
@@ -101,7 +99,7 @@ export default function ChartModal({
                         ),
                         datasets: [{
                           label: '원료 사용량 (kg)',
-                          data: tabletData.map(([_, data]) => data.tablet),
+                          data: tabletData.map(([, data]) => data.tablet),
                           backgroundColor: generateColors(tabletData.length),
                           borderWidth: 0,
                           borderRadius: 6
@@ -142,7 +140,7 @@ export default function ChartModal({
                   <div className="mt-4 text-sm text-gray-600">
                     <p>총 {tabletData.length}개 업체 표시</p>
                     <p>총 원료 사용량: {formatNumber(
-                      tabletData.reduce((sum, [_, data]) => sum + data.tablet, 0), 2
+                      tabletData.reduce((sum, [, data]) => sum + data.tablet, 0), 2
                     )} kg</p>
                   </div>
                 </div>
@@ -161,7 +159,7 @@ export default function ChartModal({
                           name.length > 20 ? name.substring(0, 20) + '...' : name
                         ),
                         datasets: [{
-                          data: otherData.map(([_, data]) => data.other),
+                          data: otherData.map(([, data]) => data.other),
                           backgroundColor: generateColors(otherData.length),
                           borderWidth: 2,
                           borderColor: '#ffffff'
@@ -196,7 +194,7 @@ export default function ChartModal({
                   <div className="mt-4 text-sm text-gray-600">
                     <p>총 {otherData.length}개 업체 표시</p>
                     <p>총 생산실적: {formatCurrency(
-                      otherData.reduce((sum, [_, data]) => sum + data.other, 0)
+                      otherData.reduce((sum, [, data]) => sum + data.other, 0)
                     )}</p>
                   </div>
                 </div>
@@ -215,7 +213,6 @@ export default function ChartModal({
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
         <div
-          ref={modalRef}
           className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden"
         >
           <div className="p-6 border-b border-gray-200 flex items-center justify-between">

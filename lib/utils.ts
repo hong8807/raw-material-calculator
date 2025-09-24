@@ -93,7 +93,7 @@ export function formatCurrency(num: number): string {
 }
 
 // 생산실적 포맷팅 함수 (억원/백만원 자동 변환)
-export function formatProduction(wonAmount: number): string {
+export function formatProduction(wonAmount: number | undefined | null): string {
   if (!wonAmount || wonAmount === 0) return '-';
 
   const million = wonAmount / 1000000;
@@ -109,7 +109,7 @@ export function formatProduction(wonAmount: number): string {
 }
 
 // 짧은 생산실적 포맷팅 (M, 억 단위)
-export function formatProductionShort(wonAmount: number): string {
+export function formatProductionShort(wonAmount: number | undefined | null): string {
   if (!wonAmount || wonAmount === 0) return '-';
 
   const million = wonAmount / 1000000;
