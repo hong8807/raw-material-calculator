@@ -177,6 +177,24 @@ export default function Home() {
     sum + calculateRawMaterialUsage(item), 0
   );
 
+  // 성분명 검색 시 실생산처별 생산실적 계산
+  const manufacturersByProduction = useMemo(() => {
+    if (!ingredientFilter || manufacturerFilter) return [];
+
+    const manufacturerMap = new Map<string, number>();
+    filteredItems.forEach(item => {
+      if (item.manufacturer_name && item.production_2023_won) {
+        const current = manufacturerMap.get(item.manufacturer_name) || 0;
+        manufacturerMap.set(item.manufacturer_name, current + item.production_2023_won);
+      }
+    });
+
+    return Array.from(manufacturerMap.entries())
+      .map(([name, production]) => ({ name, production }))
+      .sort((a, b) => b.production - a.production)
+      .slice(0, 20); // 상위 20개만 표시
+  }, [filteredItems, ingredientFilter, manufacturerFilter]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* 헤더 */}
@@ -210,14 +228,72 @@ export default function Home() {
               onChange={setIngredientFilter}
               suggestions={uniqueIngredients}
             />
-            <AutoComplete
-              label="실생산처 검색"
-              placeholder="예: 한미약품"
-              value={manufacturerFilter}
-              onChange={setManufacturerFilter}
-              suggestions={uniqueManufacturers}
-            />
+            <div>
+              <AutoComplete
+                label="실생산처 검색"
+                placeholder="예: 한미약품"
+                value={manufacturerFilter}
+                onChange={setManufacturerFilter}
+                suggestions={uniqueManufacturers}
+              />
+              {manufacturerFilter && ingredientFilter && (
+                <button
+                  onClick={() => {
+                    setManufacturerFilter('');
+                    setCurrentPage(1);
+                  }}
+                  className="mt-2 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  × 실생산처 필터 해제
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* 성분명 검색 시 실생산처 목록 표시 */}
+          {manufacturersByProduction.length > 0 && (
+            <div className="mt-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-gray-700">
+                  실생산처별 생산실적 (상위 20개)
+                </h3>
+                <span className="text-xs text-gray-500">
+                  총 {manufacturersByProduction.length}개 업체 |
+                  합계: {formatNumber(manufacturersByProduction.reduce((sum, item) => sum + item.production, 0) / 1000000, 0)}백만원
+                </span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                {manufacturersByProduction.map((item, index) => (
+                  <button
+                    key={item.name}
+                    onClick={() => {
+                      setManufacturerFilter(item.name);
+                      setCurrentPage(1);
+                    }}
+                    className={`text-left p-2 rounded-lg transition-colors border ${
+                      manufacturerFilter === item.name
+                        ? 'bg-indigo-100 border-indigo-400 ring-2 ring-indigo-300'
+                        : 'bg-gray-50 hover:bg-indigo-50 border-gray-200 hover:border-indigo-300'
+                    }`}
+                    title={`생산실적: ${formatNumber(item.production / 1000000, 0)}백만원`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <span className="text-xs font-semibold text-gray-500">#{index + 1}</span>
+                      <span className="text-xs text-indigo-600 font-medium">
+                        {formatNumber(item.production / 1000000, 0)}M
+                      </span>
+                    </div>
+                    <div className="mt-1 text-sm font-medium text-gray-800 line-clamp-2">
+                      {item.name}
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-gray-500">
+                * 클릭하면 해당 실생산처로 필터링됩니다
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
